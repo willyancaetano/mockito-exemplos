@@ -1,6 +1,7 @@
 package me.dio.mockito.exemplos;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class Pessoa {
 
@@ -38,4 +39,7 @@ public class Pessoa {
         return endereco;
     }
 
+    public boolean ehMaiorDeIdade() {
+        return ChronoUnit.YEARS.between(this.nascimento, LocalDate.now()) > 18L;
+    }
 }

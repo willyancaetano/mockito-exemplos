@@ -6,6 +6,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.mockito.Mockito.verify;
+
+/**
+ * Teste da classe {@link EnviarMensagem} exemplificando Spy
+ */
 @ExtendWith(MockitoExtension.class)
 public class EnviarMensagemTeste {
 
@@ -14,7 +19,12 @@ public class EnviarMensagemTeste {
 
     @Test
     void adicionarMensagem() {
-        enviarMensagem.adicionarMensagem(new Mensagem("Hello World"));
+        Mensagem mensagem = new Mensagem("Hello World");
+
+        enviarMensagem.adicionarMensagem(mensagem);
+
+        verify(enviarMensagem).adicionarMensagem(mensagem);
+
         Assertions.assertEquals(1, enviarMensagem.getMensagens().size());
     }
 
