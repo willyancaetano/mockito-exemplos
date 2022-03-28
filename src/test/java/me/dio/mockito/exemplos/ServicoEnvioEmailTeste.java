@@ -6,9 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-/**
- * Teste da classe {@link ServicoEnvioEmail} exemplificando testes usando Argument Captor
- */
 @ExtendWith(MockitoExtension.class)
 public class ServicoEnvioEmailTeste {
 
@@ -19,19 +16,23 @@ public class ServicoEnvioEmailTeste {
     private ServicoEnvioEmail servico;
 
     @Captor
-    private ArgumentCaptor<Email> emailCaptor;
+    private ArgumentCaptor<Email> captor;
 
     @Test
-    public void validaSeEmailEstaComDadosCorretos() {
+    void validarDadosEnviadosParaAPlataforma() {
 
-        String email = "jose.alve@provedor.com";
-        String mensagem = "Mensagem de Teste 123";
+        String enderecoDeEmail = "usuario@test.com.br";
+        String mensagem = "Olá mundo teste mensagem";
+        boolean ehFormatoHtml = true;
 
-        servico.enviaEmail(email, mensagem, true);
-        Mockito.verify(plataforma).enviaEmail(emailCaptor.capture());
+        servico.enviaEmail(enderecoDeEmail, mensagem, ehFormatoHtml);
 
-        Email emailCapturado = emailCaptor.getValue();
+        Mockito.verify(plataforma).enviaEmail(captor.capture());
+
+        Email emailCapturado = captor.getValue();
+
+        Assertions.assertEquals(enderecoDeEmail, emailCapturado.getEnderecoEmail());
+        Assertions.assertEquals(mensagem, emailCapturado.getMensagem());
         Assertions.assertEquals(Formato.HTML, emailCapturado.getFormato());
     }
-
 }
