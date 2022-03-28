@@ -3,42 +3,39 @@ package me.dio.mockito.exemplos;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static org.mockito.Mockito.anyInt;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyInt;
 
-/**
- * Teste da classe {@Link GeradorDeNumeros} exemplificando testes de métodos estáticos
- */
 @ExtendWith(MockitoExtension.class)
 public class GeradorDeNumerosTeste {
 
     @Test
-    void validaGeracaoListaDeNumeros() {
-        MockedStatic<GeradorDeNumeros> gerador = Mockito.mockStatic(GeradorDeNumeros.class);
+    void testaGeracaoComTamanhoDefinido() {
 
-        List<Integer> integers = List.of(1, 2, 3, 4, 5, 6, 7, 8);
+        MockedStatic<GeradorDeNumeros> mockedStatic = Mockito.mockStatic(GeradorDeNumeros.class);
 
-        gerador.when(() -> GeradorDeNumeros.geraNumerosAleatorios(anyInt()))
-                .thenReturn(integers);
+        List<Integer> numerosGerados = List.of(1, 2, 3, 4, 5, 6, 7);
 
-        Assertions.assertEquals(integers, GeradorDeNumeros.geraNumerosAleatorios(8));
+        mockedStatic.when(() -> GeradorDeNumeros.geraNumerosAleatorios(anyInt())).thenReturn(numerosGerados);
+
+        Assertions.assertEquals(numerosGerados, GeradorDeNumeros.geraNumerosAleatorios(10));
     }
 
     @Test
-    void validaGeracaoListaDeNumerosSemInformarTamanho() {
+    void testaGeracaoSemTamanhoDefinido() {
 
-        MockedStatic<GeradorDeNumeros> gerador = Mockito.mockStatic(GeradorDeNumeros.class);
+        MockedStatic<GeradorDeNumeros> mockedStatic = Mockito.mockStatic(GeradorDeNumeros.class);
 
-        List<Integer> integers = List.of(10, 9, 8, 6);
+        List<Integer> numerosGerados = List.of(1, 2, 3, 4, 5, 6, 7);
 
-        gerador.when(GeradorDeNumeros::geraNumerosAleatorios).thenReturn(integers);
+        mockedStatic.when(GeradorDeNumeros::geraNumerosAleatorios).thenReturn(numerosGerados);
 
-        Assertions.assertEquals(integers, GeradorDeNumeros.geraNumerosAleatorios());
+        Assertions.assertEquals(numerosGerados, GeradorDeNumeros.geraNumerosAleatorios());
     }
 }
