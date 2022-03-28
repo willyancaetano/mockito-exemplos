@@ -10,13 +10,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doThrow;
 
-/**
- * Teste da classe {@link CadastrarPessoa} apresentando cenários básicos de uso do Mockito, usando o recurso
- * de mocks e a manipulação de retornos, da forma mais simples e com manipulação de erros
- */
 @ExtendWith(MockitoExtension.class)
 public class CadastrarPessoaTeste {
 
@@ -31,22 +28,21 @@ public class CadastrarPessoaTeste {
 
         DadosLocalizacao dadosLocalizacao = new DadosLocalizacao("MG", "Uberaba", "Rua Castro Alves", "Casa", "Nova Floresta");
 
-        Mockito.when(apiDosCorreios.buscaDadosComBaseNoCep(anyString())).thenReturn(dadosLocalizacao);
+        Mockito.when(apiDosCorreios.buscaDadosComBaseNoCep(anyString())).thenReturn(null);
 
-        Pessoa jose = cadastrarPessoa.cadastrarPessoa("José", "28578527976", LocalDate.of(1947, 1, 15), "69317300");
+        Pessoa jose = cadastrarPessoa.cadastrarPessoa("José", "28578527976", LocalDate.of(1947, 1, 15), "69317345");
 
-        DadosLocalizacao enderecoJose = jose.getEndereco();
-        assertEquals(dadosLocalizacao.getBairro(), enderecoJose.getBairro());
-        assertEquals(dadosLocalizacao.getCidade(), enderecoJose.getCidade());
-        assertEquals(dadosLocalizacao.getUf(), enderecoJose.getUf());
+        assertNull(jose.getEndereco());
     }
 
     @Test
-    void tentaCadastrarPessoaMasSistemaDosCorreiosFalha() {
+    void lancarExceptionQuandoChamarApiDosCorreios() {
 
-        Mockito.when(apiDosCorreios.buscaDadosComBaseNoCep(anyString())).thenThrow(RuntimeException.class);
+        doThrow(IllegalArgumentException.class)
+                        .when(apiDosCorreios)
+                            .buscaDadosComBaseNoCep(anyString());
 
-        Assertions.assertThrows(RuntimeException.class, () -> cadastrarPessoa.cadastrarPessoa("José", "28578527976", LocalDate.of(1947, 1, 15), "69317300"));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cadastrarPessoa.cadastrarPessoa("José", "28578527976", LocalDate.of(1947, 1, 15), "69317345"));
     }
 
 }
