@@ -26,5 +26,6 @@ public class Conta {
 
     public void enviaCreditoParaEmissor(int valorAPagar) {
         //envia valor para emissor do boleto
+
     }
 }
